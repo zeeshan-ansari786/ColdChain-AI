@@ -1,0 +1,175 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+body { font-family: sans-serif; font-size: 10pt; line-height: 1.4; color: #222; }
+h1 { font-size: 19pt; text-align: center; margin-bottom: 2px; }
+h2 { font-size: 13pt; color: #1a4d8f; border-bottom: 2px solid #1a4d8f; padding-bottom: 4px; }
+.sub { text-align: center; color: #555; margin-bottom: 14px; font-size: 10pt; }
+.card { border: 1px solid #ccc; border-radius: 6px; padding: 10px 12px; margin: 10px 0; page-break-inside: avoid; }
+.card h3 { margin: 0 0 6px 0; font-size: 12pt; }
+.task { font-size: 9.5pt; color: #555; font-weight: normal; }
+.yes { display:inline-block; background:#27ae60; color:#fff; font-size:8.5pt; padding:2px 8px; border-radius:4px; margin-top:4px;}
+.no { display:inline-block; background:#c0392b; color:#fff; font-size:8.5pt; padding:2px 8px; border-radius:4px; margin-top:4px;}
+.score { font-weight: bold; }
+b { color: #1a4d8f; }
+p { margin: 5px 0; }
+.small { font-size: 9pt; color:#555; }
+.note { background:#fef9e7; border:1px solid #f0d27a; border-radius:6px; padding:8px 12px; margin:10px 0; font-size:9.5pt;}
+</style></head><body>
+<h1>ColdChain AI — All Models Explained</h1>
+<p class="sub">Every model from the syllabus, in simple words: what it is, what score it gave,<br>
+and why it was chosen or rejected.<br>
+<b>Team:</b> Hiren Patel (68), Zeeshan Ansari (70) &nbsp;|&nbsp; <b>Subject:</b> Data Science-I</p>
+<div class="note"><b>Note (Oct 4, 2026):</b> Checked line-by-line against the official Data Science-I syllabus (25MCA3001, from the DDU GNUMS portal).
+Every model below appears in the syllabus — nothing outside it is used.</div>
+<p class="small">Syllabus models used: Linear Regression, Logistic Regression, KNN, Naive Bayes, Decision Tree, Random Forest, SVM
+(both regression and classification versions where they apply).
+Winners: <b>Linear Regression</b> (regression) and <b>Decision Tree</b> (classification).</p>
+
+<div class="card">
+<h3>Baseline-persistence <span class="task">Task: regression</span><br><span class="yes">✔ USED AS FINAL MODEL</span></h3>
+<p><b>What is this model? (simple words)</b><br>A dumb rule — predict that next hour temperature will be the same as this hour&#x27;s temperature.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: none — this is a baseline, not a trained model.<br>Best setting: -<br>
+<span class="score">Result: RMSE 1.154, MAE 0.8104, R2 0.3997.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Needs no training. Very easy to understand.<br>
+<span class="issue">Problem: It cannot predict any change. It just repeats the current value.<br>baseline only — it exists so we can check that our real models actually learned something.</span></p>
+</div>
+
+<div class="card">
+<h3>LinearRegression <span class="task">Task: regression</span><br><span class="yes">✔ USED AS FINAL MODEL</span></h3>
+<p><b>What is this model? (simple words)</b><br>It draws a straight line through the data. The simplest model in our syllabus.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: none — fit directly. LinearRegression has no hyperparameters, so running a grid search on it would be a fake search.<br>Best setting: {} (no tuning)<br>
+<span class="score">Result: RMSE 1.0374, MAE 0.7046, R2 0.5149. Training time: 0.0 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Very easy to explain in viva. Trains instantly.<br>
+<span class="issue">Problem: Can only learn straight-line relations. If two features say the same thing, the weights become unstable.<br>CHOSEN — lowest RMSE of every syllabus model (1.0374), trains instantly, and it is the first topic in Unit 2 of the official syllabus.</span></p>
+</div>
+
+<div class="card">
+<h3>KNNRegressor <span class="task">Task: regression</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>To predict, it finds the k most similar hours from training data and averages their temperatures.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: n_neighbors = [3, 5, 9, 15, 25, 35] with GridSearchCV.<br>Best setting: n_neighbors = 25<br>
+<span class="score">Result: RMSE 1.0941, MAE 0.7322, R2 0.4604. Training time: 0.5 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: No assumptions about the data shape. Simple idea, easy to explain.<br>
+<span class="issue">Problem: Slow at prediction time on big data (it compares with every training row). RMSE 1.0941 is clearly worse than LinearRegression.<br>NOT CHOSEN — worse score than the linear models, and it does not scale well.</span></p>
+</div>
+
+<div class="card">
+<h3>DecisionTreeReg <span class="task">Task: regression</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>It splits the data with yes/no questions (like &quot;is door_open_min &gt; 10?&quot;) until it can predict the temperature.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: max_depth = [3, 5, 8, 12, None], min_samples_split = [2, 5, 10] with GridSearchCV.<br>Best setting: max_depth = 3, min_samples_split = 2<br>
+<span class="score">Result: RMSE 1.107, MAE 0.7681, R2 0.4476. Training time: 0.8 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Very easy to draw and explain. Needs no feature scaling.<br>
+<span class="issue">Problem: Worst score of all trained models (RMSE 1.107). Single trees overfit easily.<br>NOT CHOSEN — the worst regressor we tried.</span></p>
+</div>
+
+<div class="card">
+<h3>RandomForestReg <span class="task">Task: regression</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>Many decision trees trained on random parts of the data, then their predictions are averaged.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: n_estimators = [50, 100, 200], max_depth = [5, 10, 15, None], min_samples_split = [2, 5] with RandomizedSearchCV (10 tries).<br>Best setting: n_estimators = 200, min_samples_split = 5, max_depth = 5<br>
+<span class="score">Result: RMSE 1.0612, MAE 0.7228, R2 0.4923. Training time: 29.0 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Handles non-linear relations. More stable than a single tree.<br>
+<span class="issue">Problem: Slowest model we trained (29 seconds for 200 trees). Still worse than LinearRegression. Hard to explain tree-by-tree in viva.<br>NOT CHOSEN — slower and worse than LinearRegression.</span></p>
+</div>
+
+<div class="card">
+<h3>SVR <span class="task">Task: regression</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>Support Vector Regression — it tries to fit a tube around the data and ignores small errors inside the tube.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: C = [0.1, 1, 10], gamma = [&quot;scale&quot;, 0.01, 0.1] with GridSearchCV.<br>Best setting: C = 10, gamma = 0.01<br>
+<span class="score">Result: RMSE 1.0573, MAE 0.642, R2 0.496. Training time: 3.8 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Good at non-linear patterns. Interesting — it got the lowest MAE of all models (0.642).<br>
+<span class="issue">Problem: RMSE (our selection metric) is worse than LinearRegression&#x27;s. Sensitive to C and gamma, and needs scaled features.<br>NOT CHOSEN — lowest MAE is nice, but our rule picks on RMSE, and LinearRegression wins there.</span></p>
+</div>
+
+<div class="card">
+<h3>Baseline-majority <span class="task">Task: classification</span><br><span class="yes">✔ USED AS FINAL MODEL</span></h3>
+<p><b>What is this model? (simple words)</b><br>A dumb rule — always predict &quot;no excursion&quot; (the majority class).</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: none — this is a baseline, not a trained model.<br>Best setting: -<br>
+<span class="score">Result: accuracy 0.8715, precision 0.0, recall 0.0, F1 0.0.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Needs no training.<br>
+<span class="issue">Problem: It catches zero excursions, so it is useless for our actual goal.<br>baseline only — it proves we must judge models by F1, not accuracy.</span></p>
+</div>
+
+<div class="card">
+<h3>LogisticRegression <span class="task">Task: classification</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>It draws a straight boundary between &quot;excursion&quot; and &quot;no excursion&quot; and gives a probability.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: C = [0.1, 1.0, 10.0] with GridSearchCV, scoring on F1. Trained with class_weight=&quot;balanced&quot;.<br>Best setting: C = 0.1<br>
+<span class="score">Result: accuracy 0.8264, precision 0.3839, recall 0.5811, F1 0.4624. Training time: 0.3 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Fast and easy to explain. Gives probabilities, not just yes/no.<br>
+<span class="issue">Problem: Can only learn a straight boundary. F1 0.4624 is below our winner.<br>NOT CHOSEN — decent, but DecisionTreeClf beat it on F1.</span></p>
+</div>
+
+<div class="card">
+<h3>KNNClassifier <span class="task">Task: classification</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>To classify, it looks at the k most similar hours and takes a majority vote.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: k = [3, 5, 9, 15, 25, 35] with a manual CV loop — inside each fold the minority class was oversampled, so the validation scores stay honest.<br>Best setting: n_neighbors = 35<br>
+<span class="score">Result: accuracy 0.7882, precision 0.3261, recall 0.6081, F1 0.4245. Training time: 1.2 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Highest recall of all models (0.6081) — it catches the most excursions. Simple idea.<br>
+<span class="issue">Problem: Lowest accuracy (0.7882) and lowest precision — it raises too many false alarms. F1 0.4245 is well below the winner.<br>NOT CHOSEN — catches a lot but cries wolf too often.</span></p>
+</div>
+
+<div class="card">
+<h3>NaiveBayes <span class="task">Task: classification</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>It uses Bayes theorem and assumes every feature is independent of the others.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: none — nothing to tune, so we fit it directly on the oversampled training data (a grid search here would be a fake search).<br>Best setting: {} (no tuning)<br>
+<span class="score">Result: accuracy 0.7986, precision 0.325, recall 0.527, F1 0.4021. Training time: 0.0 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Trains instantly. Works okay on small data.<br>
+<span class="issue">Problem: The independence assumption is wrong here (temp and humidity move together). Lowest F1 of all trained models.<br>NOT CHOSEN — weakest classifier we tried.</span></p>
+</div>
+
+<div class="card">
+<h3>DecisionTreeClf <span class="task">Task: classification</span><br><span class="yes">✔ USED AS FINAL MODEL</span></h3>
+<p><b>What is this model? (simple words)</b><br>It splits the data with yes/no questions (like &quot;is temp &gt; 7.5?&quot;) until it can say excursion or not.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: max_depth = [3, 5, 8, 12, None], min_samples_split = [2, 5, 10] with GridSearchCV, scoring on F1. Trained with class_weight=&quot;balanced&quot;.<br>Best setting: max_depth = 3, min_samples_split = 2<br>
+<span class="score">Result: accuracy 0.8889, precision 0.5862, recall 0.4595, F1 0.5152. Training time: 0.9 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Highest F1 of all models (0.5152, tied with RandomForest). Very easy to draw and explain in viva. Fast.<br>
+<span class="issue">Problem: Single trees can overfit — but here the best tree was shallow (depth 3), so it stayed simple. Recall 0.4595 means it still misses about half the excursions.<br>CHOSEN — tied RandomForestClf on F1, and our tie-break rule says the simpler model wins.</span></p>
+</div>
+
+<div class="card">
+<h3>RandomForestClf <span class="task">Task: classification</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>Many decision trees trained on random parts of the data, then they vote.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: n_estimators = [50, 100, 200], max_depth = [5, 10, 15, None], min_samples_split = [2, 5] with RandomizedSearchCV (10 tries), scoring on F1. Trained with class_weight=&quot;balanced&quot;.<br>Best setting: n_estimators = 100, min_samples_split = 2, max_depth = 15<br>
+<span class="score">Result: accuracy 0.8889, precision 0.5862, recall 0.4595, F1 0.5152. Training time: 12.0 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Same best F1 as the decision tree (0.5152). Usually more stable than a single tree.<br>
+<span class="issue">Problem: 100 trees take 12 seconds to train vs 0.9 for one tree. Much harder to explain in viva.<br>NOT CHOSEN — tied the decision tree on F1, but the tie-break rule picks the simpler model.</span></p>
+</div>
+
+<div class="card">
+<h3>SVC <span class="task">Task: classification</span><br><span class="no">✘ NOT CHOSEN</span></h3>
+<p><b>What is this model? (simple words)</b><br>Support Vector Classifier — it finds the boundary with the biggest gap between the two classes.</p>
+<p><b>What output did I get when I used it?</b><br>
+Tried: C = [0.1, 1, 10], gamma = [&quot;scale&quot;, 0.01, 0.1] with GridSearchCV, scoring on F1. Trained with class_weight=&quot;balanced&quot;.<br>Best setting: C = 10, gamma = 0.01<br>
+<span class="score">Result: accuracy 0.8611, precision 0.4651, recall 0.5405, F1 0.5. Training time: 2.6 s.</span></p>
+<p><b>Why did I not use it? / What is the issue if I use it?</b><br>
+Good points: Close to the winner (F1 0.5). Good balance of precision and recall.<br>
+<span class="issue">Problem: Still below 0.5152. Sensitive to C and gamma, needs scaled features, harder to explain than a tree.<br>NOT CHOSEN — second best, but the rule picks the highest F1.</span></p>
+</div>
+<h2>Final choice</h2>
+<p><b>Regression (predict next-hour temperature): Linear Regression</b> — RMSE 1.0374, R² 0.5149. Beat the persistence baseline (1.154) and every other syllabus model; trains instantly; first topic of Unit 2 in the official syllabus.</p>
+<p><b>Classification (predict excursion): Decision Tree</b> — accuracy 0.889, F1 0.515. Tied RandomForest on F1; the simpler model wins the tie (1 tree vs 100 trees, faster, easier to explain).</p>
+<p class="small">Honest limits: the classifier still misses about half the real excursions (recall 0.46); regression R² 0.51 is student-grade, not production-ready.</p>
+</body></html>

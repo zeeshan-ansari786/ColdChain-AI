@@ -1,0 +1,7 @@
+# generated data - rebuild by running the notebook or ColdChain_AI.py
+data/
+# result plots/CSVs are regenerated on each run (kept out to keep the repo light)
+results/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
